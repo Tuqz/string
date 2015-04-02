@@ -29,10 +29,7 @@ int main() {
         480, \
         SDL_WINDOW_SHOWN);
 
-    SDL_Surface *screen = SDL_GetWindowSurface(window);
     SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
-
-    SDL_FillRect(screen, NULL, SDL_MapRGB(screen->format, 0, 0, 0));
 
     bool quit = false;
     SDL_Event evt;

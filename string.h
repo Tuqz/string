@@ -10,7 +10,7 @@ public:
     void update(double delta_t);
     void draw(SDL_Renderer *renderer);
 private:
-    double k = 100;
+    double k = 10;
     double length;
     double mass;
     std::unique_ptr<Point[]> mesh;

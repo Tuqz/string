@@ -7,7 +7,7 @@ String::String(int points) {
     size = points;
     for(int i = 0; i < points; ++i) {
         Point point;
-        point.pos = Vector(-1 + (i * length), 0);
+        point.pos = Vector(0.4 + (i * length), 0);
         point.vel = Vector(0, 1);
         mesh[i] = point;
         mesh[i].left = i ? &mesh[i - 1] : nullptr;
@@ -19,29 +19,35 @@ String::String(int points) {
 }
 
 void String::update(double delta_t) {
+    Point *new_points = new Point[size];
     for(int i = 0; i < size; ++i) {
         Vector accel(0, 0);
-        Point *curr = &mesh[i];
+        Point curr = mesh[i];
         if(mesh[i].left) {
-            Point *left = curr->left;
-            Vector diff = curr->pos - left->pos;
+            Point left = *curr.left;
+            Vector diff = curr.pos - left.pos;
             accel = accel +  (diff/diff.abs()) * ((-k * (diff.abs() - length))/mass);
         }
 
         if(mesh[i].right) {
-            Point *right = curr->right;
-            Vector diff = curr->pos - right->pos;
+            Point right = *curr.right;
+            Vector diff = curr.pos - right.pos;
             accel = accel + (diff/diff.abs()) * ((-k * (diff.abs() - length))/mass);
         }
 
-        if((curr->pos - Vector(0, 1)).abs() < 0.5) {
-            curr->vel = Vector(0, 0);
+        if((curr.pos - Vector(0, 1)).abs() < 0.5) {
+            curr.vel = Vector(0, 0);
         } else {
-            curr->vel = curr->vel + (accel * delta_t);
+            curr.vel = curr.vel + (accel * delta_t);
         }
 
-        curr->pos = curr->pos + (curr->vel * delta_t );
+        curr.pos = curr.pos + (curr.vel * delta_t );
+
+        new_points[i] = curr;
     }
+
+    memcpy(mesh.get(), new_points, size * sizeof(Point));
+    delete new_points;
 }
 
 void String::draw(SDL_Renderer *renderer) {
